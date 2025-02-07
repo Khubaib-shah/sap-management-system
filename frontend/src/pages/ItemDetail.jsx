@@ -92,7 +92,7 @@ const ItemDetail = () => {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const data = await getItemById(id);
+        const { data } = await getItemById(id);
         setItem(data);
       } catch (error) {
         console.error("Error fetching item:", error);
@@ -106,7 +106,7 @@ const ItemDetail = () => {
   }
 
   return (
-    <PDFViewer width="100%" height="910">
+    <PDFViewer width="100%" height="500">
       <ItemPDFDocument item={item} />
     </PDFViewer>
   );
