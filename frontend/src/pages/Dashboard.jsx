@@ -16,17 +16,16 @@ function Dashboard() {
     fetchItems();
   }, []);
   const navigate = useNavigate();
-  const pendingItems = items.filter(
-    (item) => item.processing === "Pending"
-  ).length;
-  const processingItems = items.filter(
+  const pendingItems =
+    items && items?.filter((item) => item.processing === "Pending").length;
+  const processingItems = items?.filter(
     (item) => item.processing === "sent for sewing"
   ).length;
-  const completedItems = items.filter(
+  const completedItems = items?.filter(
     (item) => item.processing === "Completed"
   ).length;
 
-  const totalInStock = items.filter(
+  const totalInStock = items?.filter(
     (item) => item.processing !== "Completed"
   ).length;
 

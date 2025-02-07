@@ -9,17 +9,17 @@ function Processing() {
     setSearchInput(e.target.value);
   };
 
-  const filteredItems = items.filter((item) => {
+  const filteredItems = items?.filter((item) => {
     const itemName = item.name.toLowerCase();
     const companyName = item.companyName.toLowerCase();
     const searchTerm = searchInput.toLowerCase();
     return itemName.includes(searchTerm) || companyName.includes(searchTerm);
   });
 
-  const inProductionItems = filteredItems.filter(
+  const inProductionItems = filteredItems?.filter(
     (item) => item.processing === "sent for sewing"
   );
-  const completedItems = filteredItems.filter(
+  const completedItems = filteredItems?.filter(
     (item) => item.processing === "Completed"
   );
 
