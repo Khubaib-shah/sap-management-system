@@ -17,7 +17,7 @@ app.use("/", (req, res) => {
     .json({ message: "hello world", inventoryRoute: "/inventory" });
 });
 
-let port = 5000;
+let port = process.env.PORT || 5001;
 
 app.listen(port, () => {
   console.log(`app listening on port ${port}`);
