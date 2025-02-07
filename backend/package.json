@@ -4,6 +4,9 @@
   "description": "for sale and parchase management",
   "main": "index.js",
   "type": "module",
+  "engines": {
+    "node": "20.x || 22.x"
+  },
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
