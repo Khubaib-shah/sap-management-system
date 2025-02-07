@@ -33,6 +33,8 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   row: {
+    display: "flex",
+    justifyContent: "space-between",
     flexDirection: "row",
     marginBottom: 5,
   },
@@ -41,7 +43,7 @@ const styles = StyleSheet.create({
 // Component to define the PDF document structure
 const ItemPDFDocument = ({ item }) => (
   <Document>
-    <Page style={styles.page}>
+    <Page style={styles.page} size="A6">
       <Text style={styles.title}>Item Details</Text>
       <View style={styles.section}>
         <View style={styles.row}>
@@ -106,7 +108,7 @@ const ItemDetail = () => {
   }
 
   return (
-    <PDFViewer width="100%" height="500">
+    <PDFViewer width="100%" height="600px">
       <ItemPDFDocument item={item} />
     </PDFViewer>
   );
