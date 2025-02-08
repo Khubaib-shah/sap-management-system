@@ -28,7 +28,7 @@ function Orders() {
   const { items, setItems } = useContext(ItemsContext);
   console.log(selectedOrder);
   const pendingOrders = items?.filter(
-    (order) => order.processing === "Pending"
+    (order) => order.processing === "pending"
   );
 
   const getStatusBadge = (status) => {
@@ -90,30 +90,34 @@ function Orders() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {pendingOrders?.map((order) => (
-              <TableRow key={order._id}>
-                <TableCell>{order._id.slice(-6)}</TableCell>
-                <TableCell>{order.name}</TableCell>
-                <TableCell>{order.companyName}</TableCell>
-                <TableCell>{getStatusBadge(order.processing)}</TableCell>
-                <TableCell>
-                  {new Date(order.createdAt).toLocaleString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => handleActionClick(order)}
-                  >
-                    Take Action
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            {pendingOrders.length === 0 ? (
+              <h2 className="px-2 py-1">No Pending Order Availible</h2>
+            ) : (
+              pendingOrders?.map((order) => (
+                <TableRow key={order._id}>
+                  <TableCell>{order._id.slice(-6)}</TableCell>
+                  <TableCell>{order.name}</TableCell>
+                  <TableCell>{order.companyName}</TableCell>
+                  <TableCell>{getStatusBadge(order.processing)}</TableCell>
+                  <TableCell>
+                    {new Date(order.createdAt).toLocaleString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => handleActionClick(order)}
+                    >
+                      Take Action
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
@@ -165,7 +169,7 @@ function Orders() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <Button
               variant="default"
-              onClick={() => handleStatusUpdate("Sent for Sewing")}
+              onClick={() => handleStatusUpdate("sent for sewing")}
             >
               Sent for Sewing
             </Button>
@@ -178,7 +182,7 @@ function Orders() {
 
             <Button
               variant="success"
-              onClick={() => handleStatusUpdate("Completed")}
+              onClick={() => handleStatusUpdate("completed")}
             >
               Complete
             </Button>

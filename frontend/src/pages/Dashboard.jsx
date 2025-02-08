@@ -17,17 +17,17 @@ function Dashboard() {
   }, []);
   const navigate = useNavigate();
   const pendingItems = items?.filter(
-    (item) => item.processing === "Pending"
+    (item) => item.processing === "pending"
   ).length;
   const processingItems = items?.filter(
     (item) => item.processing === "sent for sewing"
   ).length;
   const completedItems = items?.filter(
-    (item) => item.processing === "Completed"
+    (item) => item.processing === "completed"
   ).length;
 
   const totalInStock = items?.filter(
-    (item) => item.processing !== "Completed"
+    (item) => item.processing !== "completed"
   ).length;
 
   const summaryCards = [

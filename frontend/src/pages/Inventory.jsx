@@ -155,17 +155,21 @@ function Inventory() {
               <TableHead>Price</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {items?.map((item, index) => (
-              <TableRow key={item._id + index}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.quantity}</TableCell>
-                <TableCell>{item.size}</TableCell>
-                <TableCell>{item.companyName}</TableCell>
-                <TableCell>{item.price}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+          {items.length === 0 ? (
+            <h2 className="px-2 py-1">No Data Availible</h2>
+          ) : (
+            <TableBody className="capitalize">
+              {items.map((item, index) => (
+                <TableRow key={item._id + index}>
+                  <TableCell>{item.name}</TableCell>
+                  <TableCell>{item.quantity}</TableCell>
+                  <TableCell>{item.size}</TableCell>
+                  <TableCell>{item.companyName}</TableCell>
+                  <TableCell>{item.price}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          )}
         </Table>
       </div>
     </div>

@@ -31,12 +31,20 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 14,
     marginLeft: 5,
+    textTransform: "capitalize",
   },
   row: {
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "row",
-    marginBottom: 5,
+    marginBottom: 15,
+  },
+  signature: {
+    textAlign: "center",
+    top: 30,
+    borderTop: 1,
+    width: "70",
+    fontSize: 12,
   },
 });
 
@@ -44,7 +52,7 @@ const styles = StyleSheet.create({
 const ItemPDFDocument = ({ item }) => (
   <Document>
     <Page style={styles.page} size="A6">
-      <Text style={styles.title}>Item Details</Text>
+      <Text style={styles.title}>Brand Name</Text>
       <View style={styles.section}>
         <View style={styles.row}>
           <Text style={styles.label}>Name:</Text>
@@ -71,16 +79,13 @@ const ItemPDFDocument = ({ item }) => (
           <Text style={styles.value}>{item.processing}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.label}>Created At:</Text>
+          <Text style={styles.label}>Date:</Text>
           <Text style={styles.value}>
             {new Date(item.createdAt).toLocaleDateString()}
           </Text>
         </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Updated At:</Text>
-          <Text style={styles.value}>
-            {new Date(item.updatedAt).toLocaleDateString()}
-          </Text>
+        <View style={styles.signature}>
+          <Text style={styles.signatureValue}>Signature</Text>
         </View>
       </View>
     </Page>
@@ -90,9 +95,18 @@ const ItemPDFDocument = ({ item }) => (
 const ItemDetail = () => {
   const { id } = useParams();
   const [item, setItem] = useState(null);
+  const [height, setHeight] = useState(
+    window.innerWidth < 768 ? "400px" : "600px"
+  );
 
   useEffect(() => {
     const fetchItem = async () => {
+      const handleResize = () => {
+        setHeight(window.innerWidth < 768 ? "400px" : "600px");
+      };
+
+      window.addEventListener("resize", handleResize);
+      // window.removeEventListener("resize", handleResize);
       try {
         const { data } = await getItemById(id);
         setItem(data);
@@ -108,10 +122,9 @@ const ItemDetail = () => {
   }
 
   return (
-    <PDFViewer width="100%" height="600px">
+    <PDFViewer width="100%" height={height}>
       <ItemPDFDocument item={item} />
     </PDFViewer>
   );
 };
-
 export default ItemDetail;
