@@ -54,7 +54,7 @@ function Orders() {
     if (selectedOrder) {
       const updatedOrder = { ...selectedOrder, processing: status };
       try {
-        await updateInventoryItem(selectedOrder._id, {
+        await updateInventoryItem(selectedOrder?._id, {
           processing: status,
         });
 

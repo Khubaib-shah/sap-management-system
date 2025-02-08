@@ -1,5 +1,6 @@
 import apiClient from "@/config/config.js";
-import { useParams } from "react-router-dom";
+
+// Creat New Order
 export const createInventoryItem = async (formData) => {
   try {
     await apiClient.post("/inventory", formData);
@@ -8,6 +9,8 @@ export const createInventoryItem = async (formData) => {
     console.log("Failed adding items", error);
   }
 };
+
+// get all Inventory
 export const getInventoryItems = async () => {
   try {
     const response = await apiClient.get("/inventory");
@@ -19,15 +22,18 @@ export const getInventoryItems = async () => {
     console.log("Failed adding items", error);
   }
 };
+
+// update Inventory Item
 export const updateInventoryItem = async (id, updatedData) => {
   try {
     if (!updatedData) {
+      console.log("updatedData not availible", updatedData);
       return;
     }
-    const response = await apiClient.put(`/inventory/${id}`, updatedData);
+    await apiClient.put(`/inventory/${id}`, updatedData);
     console.log(updatedData);
-    const data = response.data;
-    return data;
+    // const data = response.data;
+    // return data;
   } catch (error) {
     console.log("Failed adding items", error);
   }
