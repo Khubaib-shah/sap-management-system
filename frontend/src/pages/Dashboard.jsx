@@ -16,8 +16,9 @@ function Dashboard() {
     fetchItems();
   }, []);
   const navigate = useNavigate();
-  const pendingItems =
-    items && items?.filter((item) => item.processing === "Pending").length;
+  const pendingItems = items?.filter(
+    (item) => item.processing === "Pending"
+  ).length;
   const processingItems = items?.filter(
     (item) => item.processing === "sent for sewing"
   ).length;

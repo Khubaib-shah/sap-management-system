@@ -9,18 +9,18 @@ function Processing() {
     setSearchInput(e.target.value);
   };
 
-  const filteredItems = items?.filter((item) => {
-    const itemName = item.name.toLowerCase();
-    const companyName = item.companyName.toLowerCase();
+  const filteredItems = (items || []).filter((item) => {
+    const itemName = item.name?.toLowerCase() || "";
+    const companyName = item.companyName?.toLowerCase() || "";
     const searchTerm = searchInput.toLowerCase();
     return itemName.includes(searchTerm) || companyName.includes(searchTerm);
   });
 
   const inProductionItems = filteredItems?.filter(
-    (item) => item.processing === "sent for sewing"
+    (item) => item.processing.toLowerCase() === "sent for sewing".toLowerCase()
   );
   const completedItems = filteredItems?.filter(
-    (item) => item.processing === "Completed"
+    (item) => item.processing.toLowerCase() === "completed"
   );
 
   return (
@@ -44,7 +44,7 @@ function Processing() {
               className="bg-white shadow-md rounded-lg p-6 my-4 border border-gray-200"
             >
               <h3 className="text-gray-600 font-bold text-2xl">
-                PKR: {item.price}
+                {item.price ? `PKR: ${item.price}` : "N/A"}
               </h3>
               <p className="text-sm text-gray-500 mt-4 flex items-center justify-between font-medium capitalize">
                 <span>Items: {item.name}</span>
@@ -52,7 +52,12 @@ function Processing() {
               </p>
               <hr className="my-2" />
               <p className="text-gray-500 text-sm">
-                Updated: {new Date(item.updatedAt).toLocaleDateString()}
+                Updated:{" "}
+                {new Date(item.updatedAt).toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </p>
             </div>
           ))}
@@ -65,7 +70,7 @@ function Processing() {
               className="bg-white shadow-md rounded-lg p-6 my-4 border border-gray-200"
             >
               <h3 className="text-gray-600 font-bold text-2xl">
-                PKR: {item.price}
+                {item.price ? `PKR: ${item.price}` : "N/A"}
               </h3>
               <p className="text-sm text-gray-500 mt-4 flex items-center justify-between font-medium capitalize">
                 <span>Items: {item.name}</span>
@@ -73,7 +78,12 @@ function Processing() {
               </p>
               <hr className="my-2" />
               <p className="text-gray-500 text-sm">
-                Updated: {new Date(item.updatedAt).toLocaleDateString()}
+                Updated:{" "}
+                {new Date(item.updatedAt).toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </p>
             </div>
           ))}

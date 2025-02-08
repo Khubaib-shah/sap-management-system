@@ -9,8 +9,8 @@ const inventorySchema = new Schema(
     price: { type: String, required: true },
     processing: {
       type: String,
-      enum: ["Pending", "sent for sewing", "Completed"],
-      default: "Pending",
+      enum: ["pending", "sent for sewing", "completed"],
+      default: "pending",
       required: true,
     },
   },
