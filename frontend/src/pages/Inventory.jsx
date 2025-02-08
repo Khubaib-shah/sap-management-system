@@ -38,6 +38,7 @@ function Inventory() {
     size: "",
     price: "",
   });
+  const [searchInput, setSearchInput] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -51,6 +52,23 @@ function Inventory() {
       console.log(error);
     }
   };
+  const handleSearchChange = (e) => {
+    setSearchInput(e.target.value);
+  };
+
+  const filteredItems = items.reverse().filter((item) => {
+    const itemName = item.name.toLowerCase();
+    const size = item.size.toLowerCase();
+    const status = item.processing.toLowerCase();
+    const companyName = item.companyName.toLowerCase();
+    const searchTerm = searchInput.toLowerCase();
+    return (
+      itemName.includes(searchTerm) ||
+      companyName.includes(searchTerm) ||
+      size.includes(searchTerm) ||
+      status.includes(searchInput)
+    );
+  });
   // const styleByStatus = (status) => {
   //   switch (status) {
   //     case "completed":
@@ -128,11 +146,36 @@ function Inventory() {
                     <SelectValue placeholder="Select size" />
                   </SelectTrigger>
                   <SelectContent className="bg-white">
-                    <SelectItem value="XS">XS</SelectItem>
-                    <SelectItem value="S">S</SelectItem>
-                    <SelectItem value="M">M</SelectItem>
-                    <SelectItem value="L">L</SelectItem>
-                    <SelectItem value="XL">XL</SelectItem>
+                    <SelectItem
+                      value="XS"
+                      className="border-b hover:bg-slate-400 cursor-pointer"
+                    >
+                      XS
+                    </SelectItem>
+                    <SelectItem
+                      value="S"
+                      className="border-b hover:bg-slate-400 cursor-pointer"
+                    >
+                      S
+                    </SelectItem>
+                    <SelectItem
+                      value="M"
+                      className="border-b hover:bg-slate-400 cursor-pointer"
+                    >
+                      M
+                    </SelectItem>
+                    <SelectItem
+                      value="L"
+                      className="border-b hover:bg-slate-400 cursor-pointer"
+                    >
+                      L
+                    </SelectItem>
+                    <SelectItem
+                      value="XL"
+                      className="border-b hover:bg-slate-400 cursor-pointer"
+                    >
+                      XL
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -160,12 +203,25 @@ function Inventory() {
                   }
                 />
               </div>
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full border hover:bg-slate-200"
+              >
                 Add Item
               </Button>
             </form>
           </DialogContent>
         </Dialog>
+      </div>
+      {/* Step 4: Add a search input */}
+      <div className="space-y-4">
+        <Input
+          type="text"
+          placeholder="Search by item or company name"
+          value={searchInput}
+          onChange={handleSearchChange}
+          className="w-full p-2 border border-gray-300 rounded-md"
+        />
       </div>
 
       <div className="rounded-md border">
@@ -179,11 +235,11 @@ function Inventory() {
               <TableHead>Price</TableHead>
             </TableRow>
           </TableHeader>
-          {items.length === 0 ? (
+          {filteredItems.length === 0 ? (
             <h2 className="px-2 py-1">No Data Availible</h2>
           ) : (
             <TableBody className="capitalize">
-              {items.map((item, index) => (
+              {filteredItems.map((item, index) => (
                 <TableRow
                   key={item._id + index}
                   // style={styleByStatus(item.processing)}
