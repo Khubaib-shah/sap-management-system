@@ -26,16 +26,20 @@ export const getInventoryItems = async () => {
 // update Inventory Item
 export const updateInventoryItem = async (id, updatedData) => {
   try {
-    if (!updatedData) {
-      console.log("updatedData not availible", updatedData);
+    if (!id) {
+      console.error("Item ID is required");
       return;
     }
-    await apiClient.put(`/inventory/${id}`, updatedData);
-    console.log(updatedData);
-    // const data = response.data;
-    // return data;
+    if (!updatedData || Object.keys(updatedData).length === 0) {
+      console.error("Updated data is required");
+      return;
+    }
+
+    console.log(`Updating item with ID: ${id}`, updatedData);
+
+    await apiClient.put(`/inventory/${id}`, updatedData); // Remove extra wrapping
   } catch (error) {
-    console.log("Failed adding items", error);
+    console.error("Failed to update item:", error);
   }
 };
 export const getItemById = async (id) => {

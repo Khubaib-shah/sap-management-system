@@ -26,7 +26,7 @@ function Orders() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const { items, setItems } = useContext(ItemsContext);
-
+  console.log(selectedOrder);
   const pendingOrders = items?.filter(
     (order) => order.processing === "Pending"
   );
@@ -54,14 +54,18 @@ function Orders() {
     if (selectedOrder) {
       const updatedOrder = { ...selectedOrder, processing: status };
       try {
-        await updateInventoryItem(selectedOrder?._id, {
-          processing: status,
-        });
+        if (!selectedOrder?._id) {
+          console.error("Order ID is missing");
+          return;
+        }
 
         const updatedOrders = items.map((order) =>
-          order._id === selectedOrder._id ? updatedOrder : order
+          order._id === selectedOrder?._id ? updatedOrder : order
         );
         setItems(updatedOrders);
+
+        console.log(selectedOrder._id);
+        await updateInventoryItem(selectedOrder._id, { processing: status });
       } catch (error) {
         console.error("Failed to update order:", error);
       }

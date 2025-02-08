@@ -60,7 +60,8 @@ const getInventoryById = async (req, res) => {
   }
 };
 const updateInventoryById = async (req, res) => {
-  const { id, name, companyName, quantity, size, price, processing } = req.body;
+  const { id } = req.params;
+  const { name, companyName, quantity, size, price, processing } = req.body;
   try {
     if (!id) {
       return res.status(400).json({ message: "Item id is required" });
