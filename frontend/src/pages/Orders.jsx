@@ -23,14 +23,17 @@ import { updateInventoryItem } from "@/services/InventoryApi";
 import { Link } from "react-router-dom";
 
 function Orders() {
+  // States for dialog visibility and selected order
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const { items, setItems } = useContext(ItemsContext);
-  console.log(selectedOrder);
+
+  // Filter pending orders
   const pendingOrders = items?.filter(
     (order) => order.processing === "pending"
   );
 
+  // Function to determine badge variant based on order status
   const getStatusBadge = (status) => {
     const variants = {
       Pending: "default",
@@ -45,26 +48,31 @@ function Orders() {
     );
   };
 
+  // Function to handle action button click (open dialog and set selected order)
   const handleActionClick = (order) => {
     setSelectedOrder(order);
     setIsDialogOpen(true);
   };
 
+  // Function to handle status update
   const handleStatusUpdate = async (status) => {
     if (selectedOrder) {
       const updatedOrder = { ...selectedOrder, processing: status };
+
       try {
+        // Ensure order ID is present
         if (!selectedOrder?._id) {
           console.error("Order ID is missing");
           return;
         }
 
+        // Update local items state
         const updatedOrders = items.map((order) =>
           order._id === selectedOrder?._id ? updatedOrder : order
         );
         setItems(updatedOrders);
 
-        console.log(selectedOrder._id);
+        // Update order status in backend (API call)
         await updateInventoryItem(selectedOrder._id, { processing: status });
       } catch (error) {
         console.error("Failed to update order:", error);
@@ -77,6 +85,7 @@ function Orders() {
     <div className="space-y-6">
       <h1 className="md:text-3xl font-bold">Order Management</h1>
 
+      {/* Table to display pending orders */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -90,9 +99,11 @@ function Orders() {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {/* If no pending orders, show message */}
             {pendingOrders.length === 0 ? (
-              <h2 className="px-2 py-1">No Pending Order Availible</h2>
+              <h2 className="px-2 py-1">No Pending Order Available</h2>
             ) : (
+              // Map through each pending order and display in table rows
               pendingOrders?.map((order) => (
                 <TableRow key={order._id} className="capitalize">
                   <TableCell>{order._id.slice(-6)}</TableCell>
@@ -110,7 +121,7 @@ function Orders() {
                     <Button
                       variant="default"
                       size="sm"
-                      onClick={() => handleActionClick(order)}
+                      onClick={() => handleActionClick(order)} // Trigger dialog on action click
                     >
                       Take Action
                     </Button>
@@ -122,6 +133,7 @@ function Orders() {
         </Table>
       </div>
 
+      {/* Alert Dialog for viewing order details and taking action */}
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <AlertDialogContent className="bg-white">
           <AlertDialogHeader>
@@ -129,28 +141,26 @@ function Orders() {
             <AlertDialogDescription>
               {selectedOrder && (
                 <div className="space-y-2 capitalize px-5">
+                  {/* Display selected order details */}
                   <div className="flex justify-between">
-                    <strong>Order ID:</strong>{" "}
-                    <p className="w-1/5">
-                      {selectedOrder && selectedOrder._id.slice(-6)}
-                    </p>
+                    <strong>Order ID:</strong>
+                    <p className="w-1/5">{selectedOrder._id.slice(-6)}</p>
                   </div>
-                  <div className="flex justify-between ">
-                    <strong>School/Store:</strong>{" "}
-                    <p className=" w-1/5">{selectedOrder.name}</p>
+                  <div className="flex justify-between">
+                    <strong>School/Store:</strong>
+                    <p className="w-1/5">{selectedOrder.name}</p>
                   </div>
                   <div className="flex justify-between">
                     <strong>Items:</strong>
-                    <p className="w-1/5"> {selectedOrder.companyName}</p>
+                    <p className="w-1/5">{selectedOrder.companyName}</p>
                   </div>
                   <div className="flex justify-between">
                     <strong>Status:</strong>
-                    <p className="w-1/5"> {selectedOrder.processing}</p>
+                    <p className="w-1/5">{selectedOrder.processing}</p>
                   </div>
                   <div className="flex justify-between">
                     <strong>Date:</strong>
                     <p className="w-1/5">
-                      {" "}
                       {new Date(selectedOrder.createdAt).toLocaleString(
                         "en-US",
                         {
@@ -166,6 +176,7 @@ function Orders() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
+            {/* Action buttons */}
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <Button
               variant="default"
@@ -174,8 +185,9 @@ function Orders() {
               Sent for Sewing
             </Button>
 
+            {/* Link to view and download inventory */}
             <Button variant="default">
-              <Link to={`/inventory/${selectedOrder && selectedOrder?._id}`}>
+              <Link to={`/inventory/${selectedOrder?._id}`}>
                 View & Download
               </Link>
             </Button>

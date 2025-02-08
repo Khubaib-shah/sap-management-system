@@ -6,6 +6,7 @@ import {
   ShoppingCart,
   ClipboardList,
   Menu,
+  BarChart,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,7 @@ const navItems = [
   { icon: Package, label: "Inventory", path: "/inventory" },
   { icon: ShoppingCart, label: "Orders", path: "/orders" },
   { icon: ClipboardList, label: "Processing", path: "/processing" },
-  // { icon: BarChart, label: "Reports", path: "/" },
+  { icon: BarChart, label: "Reports", path: "/reports" },
 ];
 
 function Layout({ children }) {

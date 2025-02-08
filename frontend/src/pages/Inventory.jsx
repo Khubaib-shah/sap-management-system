@@ -29,8 +29,10 @@ import { createInventoryItem } from "@/services/InventoryApi.js";
 import { ItemsContext } from "@/context/ItemsContext";
 
 function Inventory() {
+  // Context to access and update items
   const { items, setItems } = useContext(ItemsContext);
 
+  // Local state for form data and search input
   const [formData, setFormData] = useState({
     name: "",
     companyName: "",
@@ -38,28 +40,33 @@ function Inventory() {
     size: "",
     price: "",
   });
-  const [searchInput, setSearchInput] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState(""); // Search input
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // Dialog visibility
 
+  // Handle form submission to create a new inventory item
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Create new inventory item
       createInventoryItem(formData);
-      const newItem = { ...formData, id: Date.now() };
-      setItems((prevItems) => [...prevItems, newItem]);
-      setIsDialogOpen(false);
+      const newItem = { ...formData, id: Date.now() }; // Assign a temporary ID
+      setItems((prevItems) => [...prevItems, newItem]); // Update context state with new item
+      setIsDialogOpen(false); // Close the dialog after submission
     } catch (error) {
-      console.log(error);
+      console.log(error); // Log any errors
     }
   };
+
+  // Handle search input changes
   const handleSearchChange = (e) => {
     setSearchInput(e.target.value);
   };
 
+  // Filter items based on search input
   const filteredItems = items.reverse().filter((item) => {
     const itemName = item.name.toLowerCase();
-    const size = item.size.toLowerCase();
-    const status = item.processing.toLowerCase();
+    const size = item.size;
+    const status = item.processing;
     const companyName = item.companyName.toLowerCase();
     const searchTerm = searchInput.toLowerCase();
     return (
@@ -69,35 +76,14 @@ function Inventory() {
       status.includes(searchInput)
     );
   });
-  // const styleByStatus = (status) => {
-  //   switch (status) {
-  //     case "completed":
-  //       return {
-  //         backgroundColor: "rgba(2, 255, 255, 0.2)",
-  //         color: "black",
-  //       };
-  //     case "sent for sewing":
-  //       return {
-  //         backgroundColor: "rgba(188, 0, 29, 0.2)",
-  //         color: "black",
-  //       };
-  //     case "pending":
-  //       return {
-  //         backgroundColor: "rgba(2, 255, 255, 0.2)",
-  //         color: "black",
-  //       };
-  //     default:
-  //       return {
-  //         background: "white", // Default background
-  //         color: "black", // Default text color
-  //       };
-  //   }
-  // };
 
   return (
     <div className="space-y-6">
+      {/* Header with "Add Item" button */}
       <div className="flex items-center justify-between">
         <h1 className="text-lg md:text-3xl font-bold">Inventory Management</h1>
+
+        {/* Dialog to add new inventory item */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -109,7 +95,10 @@ function Inventory() {
             <DialogHeader>
               <DialogTitle>Add New Inventory Item</DialogTitle>
             </DialogHeader>
+
+            {/* Form for adding a new item */}
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Item Name Input */}
               <div className="space-y-2">
                 <Label htmlFor="name">Item Name</Label>
                 <Input
@@ -121,6 +110,8 @@ function Inventory() {
                   }
                 />
               </div>
+
+              {/* Quantity Input */}
               <div className="space-y-2">
                 <Label htmlFor="quantity">Quantity</Label>
                 <Input
@@ -134,6 +125,8 @@ function Inventory() {
                   }
                 />
               </div>
+
+              {/* Size Select */}
               <div className="space-y-2">
                 <Label htmlFor="size">Size</Label>
                 <Select
@@ -146,39 +139,16 @@ function Inventory() {
                     <SelectValue placeholder="Select size" />
                   </SelectTrigger>
                   <SelectContent className="bg-white">
-                    <SelectItem
-                      value="XS"
-                      className="border-b hover:bg-slate-400 cursor-pointer"
-                    >
-                      XS
-                    </SelectItem>
-                    <SelectItem
-                      value="S"
-                      className="border-b hover:bg-slate-400 cursor-pointer"
-                    >
-                      S
-                    </SelectItem>
-                    <SelectItem
-                      value="M"
-                      className="border-b hover:bg-slate-400 cursor-pointer"
-                    >
-                      M
-                    </SelectItem>
-                    <SelectItem
-                      value="L"
-                      className="border-b hover:bg-slate-400 cursor-pointer"
-                    >
-                      L
-                    </SelectItem>
-                    <SelectItem
-                      value="XL"
-                      className="border-b hover:bg-slate-400 cursor-pointer"
-                    >
-                      XL
-                    </SelectItem>
+                    <SelectItem value="XS">XS</SelectItem>
+                    <SelectItem value="S">S</SelectItem>
+                    <SelectItem value="M">M</SelectItem>
+                    <SelectItem value="L">L</SelectItem>
+                    <SelectItem value="XL">XL</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+
+              {/* Company Name Input */}
               <div className="space-y-2">
                 <Label htmlFor="companyName">Company Name</Label>
                 <Input
@@ -190,6 +160,8 @@ function Inventory() {
                   }
                 />
               </div>
+
+              {/* Price Input */}
               <div className="space-y-2">
                 <Label htmlFor="price">Price</Label>
                 <Input
@@ -203,6 +175,8 @@ function Inventory() {
                   }
                 />
               </div>
+
+              {/* Submit Button */}
               <Button
                 type="submit"
                 className="w-full border hover:bg-slate-200"
@@ -213,7 +187,8 @@ function Inventory() {
           </DialogContent>
         </Dialog>
       </div>
-      {/* Step 4: Add a search input */}
+
+      {/* Search Bar */}
       <div className="space-y-4">
         <Input
           type="text"
@@ -224,6 +199,7 @@ function Inventory() {
         />
       </div>
 
+      {/* Inventory Table */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -235,15 +211,14 @@ function Inventory() {
               <TableHead>Price</TableHead>
             </TableRow>
           </TableHeader>
+
+          {/* Display filtered items */}
           {filteredItems.length === 0 ? (
-            <h2 className="px-2 py-1">No Data Availible</h2>
+            <h2 className="px-2 py-1">No Data Available</h2>
           ) : (
             <TableBody className="capitalize">
               {filteredItems.map((item, index) => (
-                <TableRow
-                  key={item._id + index}
-                  // style={styleByStatus(item.processing)}
-                >
+                <TableRow key={item._id + index}>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.quantity}</TableCell>
                   <TableCell>{item.size}</TableCell>

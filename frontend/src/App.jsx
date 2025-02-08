@@ -6,6 +6,7 @@ import Orders from "./pages/Orders";
 import Processing from "./pages/Processing";
 import { ItemsProvider } from "./context/ItemsContext";
 import ItemDetail from "./pages/ItemDetail";
+import Reports from "./pages/Reports";
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
             <Route path="/orders" element={<Orders />} />
 
             <Route path="/processing" element={<Processing />} />
-            {/* <Route path="/reports" element={<Reports />} /> */}
+            <Route path="/reports" element={<Reports />} />
           </Routes>
         </Layout>
       </Router>
