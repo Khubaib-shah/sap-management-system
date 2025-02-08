@@ -94,7 +94,7 @@ function Orders() {
               <h2 className="px-2 py-1">No Pending Order Availible</h2>
             ) : (
               pendingOrders?.map((order) => (
-                <TableRow key={order._id}>
+                <TableRow key={order._id} className="capitalize">
                   <TableCell>{order._id.slice(-6)}</TableCell>
                   <TableCell>{order.name}</TableCell>
                   <TableCell>{order.companyName}</TableCell>

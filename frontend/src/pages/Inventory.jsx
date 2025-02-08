@@ -51,6 +51,30 @@ function Inventory() {
       console.log(error);
     }
   };
+  // const styleByStatus = (status) => {
+  //   switch (status) {
+  //     case "completed":
+  //       return {
+  //         backgroundColor: "rgba(2, 255, 255, 0.2)",
+  //         color: "black",
+  //       };
+  //     case "sent for sewing":
+  //       return {
+  //         backgroundColor: "rgba(188, 0, 29, 0.2)",
+  //         color: "black",
+  //       };
+  //     case "pending":
+  //       return {
+  //         backgroundColor: "rgba(2, 255, 255, 0.2)",
+  //         color: "black",
+  //       };
+  //     default:
+  //       return {
+  //         background: "white", // Default background
+  //         color: "black", // Default text color
+  //       };
+  //   }
+  // };
 
   return (
     <div className="space-y-6">
@@ -160,7 +184,10 @@ function Inventory() {
           ) : (
             <TableBody className="capitalize">
               {items.map((item, index) => (
-                <TableRow key={item._id + index}>
+                <TableRow
+                  key={item._id + index}
+                  // style={styleByStatus(item.processing)}
+                >
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.quantity}</TableCell>
                   <TableCell>{item.size}</TableCell>

@@ -65,12 +65,12 @@ function Dashboard() {
   return (
     <div className="space-y-6">
       <h1 className="text-lg font-bold md:text-3xl">Dashboard</h1>
-
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {summaryCards.map((card, index) => (
           <Card
+            className="cursor-pointer"
             key={index}
-            onClick={(e) => {
+            onClick={() => {
               card?.title === "Pending Orders"
                 ? navigate("/orders")
                 : card?.title === "Processing"
