@@ -7,6 +7,7 @@ import Processing from "./pages/Processing";
 import { ItemsProvider } from "./context/ItemsContext";
 import ItemDetail from "./pages/ItemDetail";
 import Reports from "./pages/Reports";
+import CreateInvoice from "./pages/CreateInvoice";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/invoice/" element={<CreateInvoice />} />
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/inventory/:id" element={<ItemDetail />} />
             <Route path="/orders" element={<Orders />} />

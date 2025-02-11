@@ -14,6 +14,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const navItems = [
   { icon: LayoutGrid, label: "Dashboard", path: "/" },
+  { icon: BarChart, label: "Create Invoice ", path: "/invoice" },
   { icon: Package, label: "Inventory", path: "/inventory" },
   { icon: ShoppingCart, label: "Orders", path: "/orders" },
   { icon: ClipboardList, label: "Processing", path: "/processing" },

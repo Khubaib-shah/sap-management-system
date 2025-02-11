@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ItemsContext } from "@/context/ItemsContext";
 import { getInventoryItems } from "@/services/InventoryApi";
 import { useNavigate } from "react-router-dom";
-
 function Dashboard() {
   // Accessing the items from the context
   const { items, setItems } = useContext(ItemsContext);

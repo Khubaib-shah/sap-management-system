@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,13 +25,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { createInventoryItem } from "@/services/InventoryApi.js";
-import { ItemsContext } from "@/context/ItemsContext";
+import {
+  createInventoryItem,
+  getInventoryItems,
+} from "@/services/InventoryApi.js";
 
 function Inventory() {
-  // Context to access and update items
-  const { items, setItems } = useContext(ItemsContext);
-
+  const [items, setItems] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await getInventoryItems();
+      setItems(data);
+    };
+    fetchData();
+  }, []);
   // Local state for form data and search input
   const [formData, setFormData] = useState({
     name: "",
@@ -67,10 +74,12 @@ function Inventory() {
     const itemName = item.name.toLowerCase();
     const size = item.size;
     const status = item.processing;
+    const price = item.price;
     const companyName = item.companyName.toLowerCase();
     const searchTerm = searchInput.toLowerCase();
     return (
       itemName.includes(searchTerm) ||
+      price.includes(searchTerm) ||
       companyName.includes(searchTerm) ||
       size.includes(searchTerm) ||
       status.includes(searchInput)
@@ -81,7 +90,9 @@ function Inventory() {
     <div className="space-y-6">
       {/* Header with "Add Item" button */}
       <div className="flex items-center justify-between">
-        <h1 className="text-lg md:text-3xl font-bold">Inventory Management</h1>
+        <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">
+          Inventory Management
+        </h1>
 
         {/* Dialog to add new inventory item */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -200,10 +211,10 @@ function Inventory() {
       </div>
 
       {/* Inventory Table */}
-      <div className="rounded-md border">
+      <div className="rounded-t-[10px] border ">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="bg-slate-300">
               <TableHead>Item Name</TableHead>
               <TableHead>Quantity</TableHead>
               <TableHead>Size</TableHead>
@@ -213,21 +224,34 @@ function Inventory() {
           </TableHeader>
 
           {/* Display filtered items */}
-          {filteredItems.length === 0 ? (
-            <h2 className="px-2 py-1">No Data Available</h2>
-          ) : (
-            <TableBody className="capitalize">
-              {filteredItems.map((item, index) => (
-                <TableRow key={item._id + index}>
+          <TableBody className="capitalize">
+            {filteredItems.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-2">
+                  <h2 className="px-2 py-1">No Data Available</h2>
+                </TableCell>
+              </TableRow>
+            ) : (
+              filteredItems.map((item, index) => (
+                <TableRow
+                  key={item._id + index}
+                  className={`p-4 rounded-lg shadow-sm ${
+                    item.processing === "pending"
+                      ? "bg-rose-50"
+                      : item.processing === "sent for sewing"
+                      ? "bg-sky-50"
+                      : "bg-emerald-50"
+                  }`}
+                >
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.quantity}</TableCell>
                   <TableCell>{item.size}</TableCell>
                   <TableCell>{item.companyName}</TableCell>
                   <TableCell>{item.price}</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          )}
+              ))
+            )}
+          </TableBody>
         </Table>
       </div>
     </div>

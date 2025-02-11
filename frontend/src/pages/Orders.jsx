@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -18,16 +18,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { ItemsContext } from "@/context/ItemsContext";
-import { updateInventoryItem } from "@/services/InventoryApi";
+import {
+  getInventoryItems,
+  updateInventoryItem,
+} from "@/services/InventoryApi";
 import { Link } from "react-router-dom";
 
 function Orders() {
   // States for dialog visibility and selected order
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const { items, setItems } = useContext(ItemsContext);
-
+  const [items, setItems] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await getInventoryItems();
+      setItems(data);
+    };
+    fetchData();
+  }, []);
   // Filter pending orders
   const pendingOrders = items?.filter(
     (order) => order.processing === "pending"
@@ -91,7 +99,7 @@ function Orders() {
           <TableHeader>
             <TableRow>
               <TableHead className="text-xs md:text-sm">Order ID</TableHead>
-              <TableHead>School/Store</TableHead>
+              <TableHead>From</TableHead>
               <TableHead>Items</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Date</TableHead>
@@ -101,7 +109,11 @@ function Orders() {
           <TableBody>
             {/* If no pending orders, show message */}
             {pendingOrders.length === 0 ? (
-              <h2 className="px-2 py-1">No Pending Order Available</h2>
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-2">
+                  <h2 className="px-2 py-1">No Pending Order Available</h2>
+                </TableCell>
+              </TableRow>
             ) : (
               // Map through each pending order and display in table rows
               pendingOrders?.map((order) => (
@@ -134,33 +146,39 @@ function Orders() {
       </div>
 
       {/* Alert Dialog for viewing order details and taking action */}
-      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <AlertDialogContent className="bg-white">
+      <AlertDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        className="rounded"
+      >
+        <AlertDialogContent className="bg-white max-w-[95%] sm:max-w-md md:max-w-xl lg:max-w-xl">
           <AlertDialogHeader>
-            <AlertDialogTitle>Order Details</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle className="text-xl font-bold text-gray-800 text-left">
+              Order Details
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-600">
               {selectedOrder && (
-                <div className="space-y-2 capitalize px-5">
+                <div className="space-y-3 w-full capitalize px-4 py-2">
                   {/* Display selected order details */}
-                  <div className="flex justify-between">
+                  <div className="flex justify-between gap-2">
                     <strong>Order ID:</strong>
-                    <p className="w-1/5">{selectedOrder._id.slice(-6)}</p>
+                    <p className="break-words">{selectedOrder._id.slice(-6)}</p>
                   </div>
-                  <div className="flex justify-between">
-                    <strong>School/Store:</strong>
-                    <p className="w-1/5">{selectedOrder.name}</p>
+                  <div className="flex justify-between gap-2">
+                    <strong>From:</strong>
+                    <p className="break-words">{selectedOrder.name}</p>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between gap-2">
                     <strong>Items:</strong>
-                    <p className="w-1/5">{selectedOrder.companyName}</p>
+                    <p className="break-words">{selectedOrder.companyName}</p>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between gap-2">
                     <strong>Status:</strong>
-                    <p className="w-1/5">{selectedOrder.processing}</p>
+                    <p className="break-words">{selectedOrder.processing}</p>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between gap-2">
                     <strong>Date:</strong>
-                    <p className="w-1/5">
+                    <p className="break-words">
                       {new Date(selectedOrder.createdAt).toLocaleString(
                         "en-US",
                         {
@@ -175,25 +193,32 @@ function Orders() {
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
+          <AlertDialogFooter className="flex gap-2">
             {/* Action buttons */}
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="w-full sm:w-auto">
+              Cancel
+            </AlertDialogCancel>
             <Button
               variant="default"
+              className="w-full sm:w-auto"
               onClick={() => handleStatusUpdate("sent for sewing")}
             >
               Sent for Sewing
             </Button>
 
             {/* Link to view and download inventory */}
-            <Button variant="default">
-              <Link to={`/inventory/${selectedOrder?._id}`}>
+            <Button variant="default" className="w-full sm:w-auto">
+              <Link
+                to={`/inventory/${selectedOrder?._id}`}
+                className="w-full block"
+              >
                 View & Download
               </Link>
             </Button>
 
             <Button
-              variant="success"
+              variant="outline"
+              className="w-full sm:w-auto"
               onClick={() => handleStatusUpdate("completed")}
             >
               Complete
