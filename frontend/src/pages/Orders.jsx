@@ -183,7 +183,7 @@ function Orders() {
                         "en-US",
                         {
                           year: "numeric",
-                          month: "long",
+                          month: "numeric",
                           day: "numeric",
                         }
                       )}

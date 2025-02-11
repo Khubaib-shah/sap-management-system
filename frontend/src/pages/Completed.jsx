@@ -1,21 +1,17 @@
 import { useState, useEffect, useMemo } from "react";
 import { getInventoryItems } from "@/services/InventoryApi";
 
-function Processing() {
+function Completed() {
   const [items, setItems] = useState([]);
-  const [loading, setloading] = useState(true);
   const [searchInput, setSearchInput] = useState("");
 
   // Fetch data on component mount
   useEffect(() => {
     const fetchData = async () => {
-      setloading(true);
       try {
         const { data } = await getInventoryItems();
         setItems(data);
-        setloading(false);
       } catch (error) {
-        setloading(false);
         console.error("Error fetching inventory items:", error);
       }
     };
@@ -39,12 +35,11 @@ function Processing() {
   }, [items, searchInput]);
 
   // Separate items into 'in production' and 'completed' categories
-  const { inProductionItems, completedItems } = useMemo(() => {
-    const inProduction = filteredItems.filter(
-      (item) => item.processing.toLowerCase() === "sent for sewing"
+  const { completedItems } = useMemo(() => {
+    const completed = filteredItems.filter(
+      (item) => item.processing.toLowerCase() === "completed"
     );
-
-    return { inProductionItems: inProduction };
+    return { completedItems: completed };
   }, [filteredItems]);
 
   // Render item card
@@ -74,39 +69,33 @@ function Processing() {
   );
 
   return (
-    <div className="space-y-8  bg-gray-50 min-h-screen">
+    <div className="space-y-8 bg-gray-50 min-h-screen">
       {/* Title of the page */}
-      <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">
-        Processing Management
-      </h1>
+      <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">Completed</h1>
 
       {/* Search input */}
-      {inProductionItems.length > 0 && (
+      {completedItems.length > 0 && (
         <input
           type="text"
           value={searchInput}
           onChange={handleSearchChange}
           placeholder="Search by item or company name"
-          className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
+          className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
         />
       )}
 
-      {/* Grid container for displaying 'In Production' and 'Completed' items */}
+      {/* Grid container for displaying 'Completed' items */}
       <div className="grid gap-1">
-        {/* In Production Section */}
+        {/* Completed Section */}
         <div>
           <h2 className="font-semibold text-2xl text-gray-800 mb-4">
-            In Production
+            Completed: {completedItems.length}
           </h2>
-          {loading ? (
-            <div className="bg-white p-6 rounded-xl shadow-md text-center">
-              <h2 className="text-gray-500 text-lg">Loading</h2>
-            </div>
-          ) : inProductionItems.length > 0 ? (
-            inProductionItems.map(renderItemCard)
+          {completedItems.length > 0 ? (
+            completedItems.map(renderItemCard)
           ) : (
             <div className="bg-white p-6 rounded-xl shadow-md text-center">
-              <h2 className="text-gray-500 text-lg">No Orders for Sewing</h2>
+              <h2 className="text-gray-500 text-lg">0 Orders Completed</h2>
             </div>
           )}
         </div>
@@ -115,4 +104,4 @@ function Processing() {
   );
 }
 
-export default Processing;
+export default Completed;
