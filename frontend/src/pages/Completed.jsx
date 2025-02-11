@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { getInventoryItems } from "@/services/InventoryApi";
+import { File, FileText } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function Completed() {
   const [items, setItems] = useState([]);
@@ -46,12 +48,16 @@ function Completed() {
   const renderItemCard = (item) => (
     <div
       key={item._id}
-      className="bg-white shadow-lg rounded-xl p-6 my-4 border border-gray-100 hover:shadow-xl transition-shadow duration-300"
+      className="bg-white shadow-lg rounded-xl p-6 my-4 border border-gray-100 hover:shadow-xl transition-shadow duration-300 relative"
     >
       <h3 className="text-gray-800 font-bold text-2xl mb-2">
         {item.price ? `PKR: ${item.price}` : "N/A"}
       </h3>
-      <div></div>
+      <div className="absolute top-6 right-5">
+        <Link to={`/inventory/${item._id}`} className="w-full block">
+          <FileText />
+        </Link>
+      </div>
       <p className="text-sm text-gray-600 mt-4 flex items-center justify-between font-medium capitalize">
         <span>Items: {item.name}</span>
         <span>Company: {item.companyName.split(" ")[0]}</span>

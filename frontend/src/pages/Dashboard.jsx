@@ -85,6 +85,8 @@ function Dashboard() {
                 ? navigate("/orders")
                 : card?.title === "Processing"
                 ? navigate("/processing")
+                : card?.title === "Sold Out Items"
+                ? navigate("/complete")
                 : "/";
             }}
           >

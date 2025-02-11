@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,17 +29,10 @@ import {
   createInventoryItem,
   getInventoryItems,
 } from "@/services/InventoryApi.js";
+import SearchBar from "@/components/SearchBar";
 
 function Inventory() {
   const [items, setItems] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await getInventoryItems();
-      setItems(data);
-    };
-    fetchData();
-  }, []);
-  // Local state for form data and search input
   const [formData, setFormData] = useState({
     name: "",
     companyName: "",
@@ -47,44 +40,73 @@ function Inventory() {
     size: "",
     price: "",
   });
-  const [searchInput, setSearchInput] = useState(""); // Search input
-  const [isDialogOpen, setIsDialogOpen] = useState(false); // Dialog visibility
+  const [searchInput, setSearchInput] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [filterOption, setFilterOption] = useState(""); // State for filter option
 
-  // Handle form submission to create a new inventory item
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await getInventoryItems();
+      setItems(data);
+    };
+    fetchData();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Create new inventory item
-      createInventoryItem(formData);
-      const newItem = { ...formData, id: Date.now() }; // Assign a temporary ID
-      setItems((prevItems) => [...prevItems, newItem]); // Update context state with new item
-      setIsDialogOpen(false); // Close the dialog after submission
+      await createInventoryItem(formData);
+      const newItem = { ...formData, id: Date.now() };
+      setItems((prevItems) => [...prevItems, newItem]);
+      setIsDialogOpen(false);
     } catch (error) {
-      console.log(error); // Log any errors
+      console.log(error);
     }
   };
 
-  // Handle search input changes
   const handleSearchChange = (e) => {
     setSearchInput(e.target.value);
   };
 
-  // Filter items based on search input
-  const filteredItems = items.reverse().filter((item) => {
-    const itemName = item.name.toLowerCase();
-    const size = item.size;
-    const status = item.processing;
-    const price = item.price;
-    const companyName = item.companyName.toLowerCase();
-    const searchTerm = searchInput.toLowerCase();
-    return (
-      itemName.includes(searchTerm) ||
-      price.includes(searchTerm) ||
-      companyName.includes(searchTerm) ||
-      size.includes(searchTerm) ||
-      status.includes(searchInput)
-    );
-  });
+  const handleFilterChange = (value) => {
+    setFilterOption(value);
+  };
+
+  // Filter and sort items based on search input and filter option
+  const filteredItems = items
+    .filter((item) => {
+      const itemName = item.name.toLowerCase();
+      const size = item.size;
+      const status = item.processing;
+      const price = item.price;
+      const companyName = item.companyName.toLowerCase();
+      const searchTerm = searchInput.toLowerCase();
+      return (
+        itemName.includes(searchTerm) ||
+        price.includes(searchTerm) ||
+        companyName.includes(searchTerm) ||
+        size.includes(searchTerm) ||
+        status.includes(searchInput)
+      );
+    })
+    .sort((a, b) => {
+      switch (filterOption) {
+        case "pending":
+          return a.processing === "pending" ? -1 : 1;
+        case "complete":
+          return a.processing === "completed" ? -1 : 1;
+        case "sent for sewing":
+          return a.processing === "sent for sewing" ? -1 : 1;
+        case "a to z":
+          return a.name.localeCompare(b.name);
+        case "high to low":
+          return b.price - a.price;
+        case "by date":
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        default:
+          return 0;
+      }
+    });
 
   return (
     <div className="space-y-6">
@@ -199,15 +221,28 @@ function Inventory() {
         </Dialog>
       </div>
 
-      {/* Search Bar */}
-      <div className="space-y-4">
-        <Input
-          type="text"
-          placeholder="Search by item or company name"
-          value={searchInput}
-          onChange={handleSearchChange}
-          className="w-full p-2 border border-gray-300 rounded-md"
-        />
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex-1">
+          {/* Search Bar */}
+          <SearchBar
+            searchInput={searchInput}
+            onSearchChange={handleSearchChange}
+          />
+        </div>
+        {/* Filter Select with Search */}
+        <Select value={filterOption} onValueChange={handleFilterChange}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Filter by" />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            <SelectItem value="pending">Pending</SelectItem>
+            <SelectItem value="complete">Complete</SelectItem>
+            <SelectItem value="sent for sewing">Sent for Sewing</SelectItem>
+            <SelectItem value="a to z">A to Z</SelectItem>
+            <SelectItem value="high to low">High to Low</SelectItem>
+            <SelectItem value="by date">By Date</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Inventory Table */}
