@@ -80,15 +80,13 @@ function Completed() {
       <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">Completed</h1>
 
       {/* Search input */}
-      {completedItems.length > 0 && (
-        <input
-          type="text"
-          value={searchInput}
-          onChange={handleSearchChange}
-          placeholder="Search by item or company name"
-          className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-        />
-      )}
+      <input
+        type="text"
+        value={searchInput}
+        onChange={handleSearchChange}
+        placeholder="Search by item or company name"
+        className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+      />
 
       {/* Grid container for displaying 'Completed' items */}
       <div className="grid gap-1">
