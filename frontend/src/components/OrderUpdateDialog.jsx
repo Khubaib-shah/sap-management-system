@@ -36,10 +36,6 @@ const OrderUpdateDialog = ({
                   <p className="break-words">{selectedOrder.name}</p>
                 </div>
                 <div className="flex justify-between gap-2">
-                  <strong>Items:</strong>
-                  <p className="break-words">{selectedOrder.companyName}</p>
-                </div>
-                <div className="flex justify-between gap-2">
                   <strong>Status:</strong>
                   <p className="break-words">{selectedOrder.processing}</p>
                 </div>

@@ -115,10 +115,6 @@ const ItemPDFDocument = ({ item }) => (
           <Text style={styles.value}>{item.name}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.label}>Company Name:</Text>
-          <Text style={styles.value}>{item.companyName}</Text>
-        </View>
-        <View style={styles.row}>
           <Text style={styles.label}>Quantity:</Text>
           <Text style={styles.value}>{item.quantity}</Text>
         </View>

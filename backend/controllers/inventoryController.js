@@ -1,16 +1,16 @@
 import { Inventory } from "../model/inventoryModel.js";
 
 const createInventory = async (req, res) => {
-  const { name, companyName, quantity, size, price, processing } = req.body;
+  const { name, quantity, size, price, processing } = req.body;
 
-  if (!name || !companyName || !quantity || !size || !price) {
+  if (!name || !quantity || !size || !price) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
     const inventoryItem = await Inventory.create({
       name,
-      companyName,
+
       quantity,
       size,
       price,
@@ -61,14 +61,14 @@ const getInventoryById = async (req, res) => {
 };
 const updateInventoryById = async (req, res) => {
   const { id } = req.params;
-  const { name, companyName, quantity, size, price, processing } = req.body;
+  const { name, quantity, size, price, processing } = req.body;
   try {
     if (!id) {
       return res.status(400).json({ message: "Item id is required" });
     }
     const updatedInventory = await Inventory.findByIdAndUpdate(id, {
       name,
-      companyName,
+
       quantity,
       size,
       price,

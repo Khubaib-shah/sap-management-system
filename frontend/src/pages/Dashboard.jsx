@@ -1,13 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Package2, ShoppingCart, ClipboardList, Check } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ItemsContext } from "@/context/ItemsContext";
 import { getInventoryItems } from "@/services/InventoryApi";
 import { useNavigate } from "react-router-dom";
 function Dashboard() {
-  // Accessing the items from the context
-  const { items, setItems } = useContext(ItemsContext);
-
+  const [items, setItems] = useState([]);
   // Fetch the inventory items when the component mounts
   useEffect(() => {
     const fetchItems = async () => {

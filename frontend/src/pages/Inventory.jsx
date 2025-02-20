@@ -181,19 +181,6 @@ function Inventory() {
                 </Select>
               </div>
 
-              {/* Company Name Input */}
-              <div className="space-y-2">
-                <Label htmlFor="companyName">Company Name</Label>
-                <Input
-                  id="companyName"
-                  required
-                  value={formData?.companyName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, companyName: e.target.value })
-                  }
-                />
-              </div>
-
               {/* Price Input */}
               <div className="space-y-2">
                 <Label htmlFor="price">Price</Label>
@@ -253,7 +240,6 @@ function Inventory() {
               <TableHead>Item Name</TableHead>
               <TableHead>Quantity</TableHead>
               <TableHead>Size</TableHead>
-              <TableHead>Company</TableHead>
               <TableHead>Price</TableHead>
             </TableRow>
           </TableHeader>
@@ -281,7 +267,6 @@ function Inventory() {
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.quantity}</TableCell>
                   <TableCell>{item.size}</TableCell>
-                  <TableCell>{item.companyName}</TableCell>
                   <TableCell>{item.price}</TableCell>
                 </TableRow>
               ))

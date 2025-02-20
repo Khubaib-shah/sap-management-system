@@ -6,7 +6,7 @@ const SearchBar = ({ searchInput, onSearchChange }) => {
     <div className="space-y-4">
       <Input
         type="text"
-        placeholder="Search by item or company name"
+        placeholder="Search by item or price"
         value={searchInput}
         onChange={onSearchChange}
         className="w-full p-2 border border-gray-300 rounded-md"

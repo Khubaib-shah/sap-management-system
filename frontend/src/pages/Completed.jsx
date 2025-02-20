@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { getInventoryItems } from "@/services/InventoryApi";
-import { File, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function Completed() {

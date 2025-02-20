@@ -7,7 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import {
   getInventoryItems,
   updateInventoryItem,
@@ -69,7 +68,6 @@ function Orders() {
           <TableHeader>
             <TableRow>
               <TableHead className="text-xs md:text-sm">Order ID</TableHead>
-              <TableHead>From</TableHead>
               <TableHead>Items</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Date</TableHead>
@@ -88,7 +86,6 @@ function Orders() {
                 <TableRow key={order._id} className="capitalize">
                   <TableCell>{order._id.slice(-6)}</TableCell>
                   <TableCell>{order.name}</TableCell>
-                  <TableCell>{order.companyName}</TableCell>
                   <TableCell className="underline">
                     {order.processing}
                   </TableCell>

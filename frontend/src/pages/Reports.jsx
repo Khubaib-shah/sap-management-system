@@ -6,8 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ItemsContext } from "@/context/ItemsContext";
 import { getInventoryItems } from "@/services/InventoryApi";
 
 function Reports() {

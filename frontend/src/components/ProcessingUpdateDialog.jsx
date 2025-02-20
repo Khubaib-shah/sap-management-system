@@ -31,10 +31,6 @@ const ProcessingUpdateDialog = ({
                   <span>{selectedItem.name}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-medium">Company:</span>
-                  <span>{selectedItem.companyName}</span>
-                </div>
-                <div className="flex justify-between">
                   <span className="font-medium">Current Status:</span>
                   <span className="capitalize">{selectedItem.processing}</span>
                 </div>

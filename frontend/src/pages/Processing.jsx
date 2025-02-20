@@ -62,8 +62,7 @@ function Processing() {
     const searchTerm = searchInput.toLowerCase();
     return items.filter((item) => {
       const itemName = item.name?.toLowerCase() || "";
-      const companyName = item.companyName?.toLowerCase() || "";
-      return itemName.includes(searchTerm) || companyName.includes(searchTerm);
+      return itemName.includes(searchTerm);
     });
   }, [items, searchInput]);
 
@@ -99,7 +98,6 @@ function Processing() {
       </div>
       <p className="text-sm text-gray-600 mt-4 flex items-center justify-between font-medium capitalize">
         <span>Items: {item.name}</span>
-        <span>Company: {item.companyName.split(" ")[0]}</span>
       </p>
       <hr className="my-3 border-gray-100" />
       <p className="text-gray-500 text-sm">
@@ -121,7 +119,7 @@ function Processing() {
           type="text"
           value={searchInput}
           onChange={handleSearchChange}
-          placeholder="Search by item or company name"
+          placeholder="Search by item or price"
           className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
         />
       )}
