@@ -79,12 +79,10 @@ function Inventory() {
       const size = item.size;
       const status = item.processing;
       const price = item.price;
-      const companyName = item.companyName.toLowerCase();
       const searchTerm = searchInput.toLowerCase();
       return (
         itemName.includes(searchTerm) ||
         price.includes(searchTerm) ||
-        companyName.includes(searchTerm) ||
         size.includes(searchTerm) ||
         status.includes(searchInput)
       );
@@ -241,6 +239,7 @@ function Inventory() {
               <TableHead>Quantity</TableHead>
               <TableHead>Size</TableHead>
               <TableHead>Price</TableHead>
+              <TableHead>Total price</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -268,6 +267,7 @@ function Inventory() {
                   <TableCell>{item.quantity}</TableCell>
                   <TableCell>{item.size}</TableCell>
                   <TableCell>{item.price}</TableCell>
+                  <TableCell>{item.price * item.quantity}</TableCell>
                 </TableRow>
               ))
             )}

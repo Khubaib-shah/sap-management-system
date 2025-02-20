@@ -112,12 +112,10 @@ const InvoicePDFDocument = ({ formData }) => (
           <Text style={styles.label}>Name:</Text>
           <Text style={styles.value}>{formData.name}</Text>
         </View>
-        {formData.companyName.length >= 1 ? (
-          <View style={styles.row}>
-            <Text style={styles.label}>Company Name:</Text>
-            <Text style={styles.value}>{formData.companyName}</Text>
-          </View>
-        ) : null}
+        <View style={styles.row}>
+          <Text style={styles.label}>Color:</Text>
+          <Text style={styles.value}>{formData.color}</Text>
+        </View>
         <View style={styles.row}>
           <Text style={styles.label}>Quantity:</Text>
           <Text style={styles.value}>{formData.quantity}</Text>
@@ -127,12 +125,12 @@ const InvoicePDFDocument = ({ formData }) => (
           <Text style={styles.value}>PKR {formData.price}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.label}>Color:</Text>
-          <Text style={styles.value}>{formData.color}</Text>
-        </View>
-        <View style={styles.row}>
           <Text style={styles.label}>Date:</Text>
           <Text style={styles.value}>{new Date().toLocaleDateString()}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Total Price:</Text>
+          <Text style={styles.value}>{formData.quantity * formData.price}</Text>
         </View>
       </View>
       {/* Signature */}
@@ -147,7 +145,6 @@ const CreateInvoice = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    companyName: "",
     quantity: "",
     price: "",
     color: "",
@@ -189,18 +186,6 @@ const CreateInvoice = () => {
                   type="text"
                   name="name"
                   value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Company Name
-                </label>
-                <input
-                  type="text"
-                  name="companyName"
-                  value={formData.companyName}
                   onChange={handleInputChange}
                   className="w-full p-2 border border-gray-300 rounded-md"
                 />

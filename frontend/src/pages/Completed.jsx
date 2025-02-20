@@ -58,10 +58,6 @@ function Completed() {
           <FileText />
         </Link>
       </div>
-      <p className="text-sm text-gray-600 mt-4 flex items-center justify-between font-medium capitalize">
-        <span>Items: {item.name}</span>
-        <span>Company: {item.companyName.split(" ")[0]}</span>
-      </p>
       <hr className="my-3 border-gray-100" />
       <p className="text-gray-500 text-sm">
         Updated:{" "}

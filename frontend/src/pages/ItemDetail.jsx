@@ -127,6 +127,10 @@ const ItemPDFDocument = ({ item }) => (
           <Text style={styles.value}>PKR {item.price}</Text>
         </View>
         <View style={styles.row}>
+          <Text style={styles.label}>Total price:</Text>
+          <Text style={styles.value}>{item.price * item.quantity}</Text>
+        </View>
+        <View style={styles.row}>
           <Text style={styles.label}>Date:</Text>
           <Text style={styles.value}>
             {new Date(item.createdAt).toLocaleDateString()}
