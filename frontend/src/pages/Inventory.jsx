@@ -48,11 +48,11 @@ function Inventory() {
 
   useEffect(() => {
     fetchData();
-  }, [filterOption]);
+  }, []);
 
   const fetchData = async () => {
     const { data } = await getInventoryItems();
-    setItems(data);
+    setItems(data.reverse());
     console.log(data);
   };
 
@@ -61,7 +61,7 @@ function Inventory() {
     try {
       await createInventoryItem(formData);
       const { data } = await getInventoryItems();
-      setItems(data);
+      setItems(data.reverse());
 
       setFormData({
         name: "",

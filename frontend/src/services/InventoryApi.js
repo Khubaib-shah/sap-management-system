@@ -1,9 +1,11 @@
 import apiClient from "@/config/config.js";
+import toast from "react-hot-toast";
 
 export const createInventoryItem = async (formData) => {
   try {
     await apiClient.post("/inventory", formData);
     console.log("item added to inventory", formData);
+    toast.success(`${formData.name} Added to Inventory`);
   } catch (error) {
     console.log("Failed adding items", error);
   }
@@ -31,7 +33,10 @@ export const updateInventoryItem = async (id, updatedData) => {
 
     console.log(`Updating item with ID: ${id}`, updatedData);
 
-    await apiClient.put(`/inventory/${id}`, updatedData);
+    const response = await apiClient.put(`/inventory/${id}`, updatedData);
+    toast.success(`"${response.data.data.name}" Has Been Updated.`);
+
+    return response.data;
   } catch (error) {
     console.error("Failed to update item:", error);
   }
@@ -77,8 +82,9 @@ export const getItemByIdAndDelete = async (id) => {
       return;
     }
     const response = await apiClient.delete(`/inventory/${id}`);
-    console.log("item Deleted", response);
+    toast.success(`"${response.data.data.name}" removed successfully.`);
 
+    console.log(response.data.data.name);
     return response.data;
   } catch (error) {
     if (error.response) {

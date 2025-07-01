@@ -28,15 +28,14 @@ function Processing() {
     fetchData();
   }, []);
 
-  // Update status handler
   const handleStatusUpdate = async (newStatus) => {
     if (!selectedItem?._id) return;
 
     try {
-      // Update in backend
-      await updateInventoryItem(selectedItem._id, { processing: newStatus });
+      const { data } = await updateInventoryItem(selectedItem._id, {
+        processing: newStatus,
+      });
 
-      // Update local state
       setItems((prevItems) =>
         prevItems.map((item) =>
           item._id === selectedItem._id
@@ -46,17 +45,16 @@ function Processing() {
       );
 
       setIsDialogOpen(false);
+
+      toast.success(`"${data.name}" Has Been Completed.`);
     } catch (error) {
       console.error("Update failed:", error);
     }
   };
-
-  // Handle search input changes
   const handleSearchChange = (e) => {
     setSearchInput(e.target.value);
   };
 
-  // Filter items based on search term
   const filteredItems = useMemo(() => {
     if (!items.length) return [];
     const searchTerm = searchInput.toLowerCase();
@@ -66,7 +64,6 @@ function Processing() {
     });
   }, [items, searchInput]);
 
-  // Separate items into 'in production' and 'completed' categories
   const { inProductionItems, completedItems } = useMemo(() => {
     const inProduction = filteredItems.filter(
       (item) => item.processing.toLowerCase() === "sent for sewing"
@@ -75,15 +72,11 @@ function Processing() {
     return { inProductionItems: inProduction };
   }, [filteredItems]);
 
-  // Render item card
-
-  // Modified renderItemCard with click handler
   const renderItemCard = (item) => (
     <div
       key={item._id}
       className="bg-white shadow-lg rounded-xl p-6 my-4 border border-gray-100 hover:shadow-xl transition-shadow duration-300 relative"
     >
-      {/* Existing card content */}
       <h3 className="text-gray-800 font-bold text-2xl mb-2">
         {item.price ? `PKR: ${item.price}` : "N/A"}
       </h3>
@@ -108,12 +101,10 @@ function Processing() {
 
   return (
     <div className="space-y-8 bg-gray-50 min-h-screen">
-      {/* Title of the page */}
       <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">
         Processing Management
       </h1>
 
-      {/* Search input */}
       {inProductionItems.length > 0 && (
         <input
           type="text"
@@ -123,10 +114,7 @@ function Processing() {
           className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent transition-all"
         />
       )}
-
-      {/* Grid container for displaying 'In Production' and 'Completed' items */}
       <div className="grid gap-1">
-        {/* In Production Section */}
         <div>
           <h2 className="font-semibold text-2xl text-gray-800 mb-4">
             In Production {inProductionItems.length}

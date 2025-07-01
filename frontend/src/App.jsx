@@ -8,6 +8,7 @@ import ItemDetail from "./pages/ItemDetail";
 import Reports from "./pages/Reports";
 import CreateInvoice from "./pages/CreateInvoice";
 import Completed from "./pages/Completed";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/reports" element={<Reports />} />
         </Routes>
       </Layout>
+      <Toaster />
     </Router>
   );
 }

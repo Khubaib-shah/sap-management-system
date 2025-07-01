@@ -20,12 +20,9 @@ function Completed() {
     fetchData();
   }, []);
 
-  // Handle search input changes
   const handleSearchChange = (e) => {
     setSearchInput(e.target.value);
   };
-
-  // Filter items based on search term
   const filteredItems = useMemo(() => {
     if (!items.length) return [];
     const searchTerm = searchInput.toLowerCase();
@@ -36,7 +33,6 @@ function Completed() {
     });
   }, [items, searchInput]);
 
-  // Separate items into 'in production' and 'completed' categories
   const { completedItems } = useMemo(() => {
     const completed = filteredItems.filter(
       (item) => item.processing.toLowerCase() === "completed"
