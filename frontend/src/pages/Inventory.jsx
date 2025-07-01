@@ -28,6 +28,7 @@ import {
 import {
   createInventoryItem,
   getInventoryItems,
+  getItemByIdAndDelete,
 } from "@/services/InventoryApi.js";
 import SearchBar from "@/components/SearchBar";
 
@@ -42,22 +43,33 @@ function Inventory() {
   });
   const [searchInput, setSearchInput] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [filterOption, setFilterOption] = useState(""); // State for filter option
+  const [isLoading, setIsLoading] = useState(false);
+  const [filterOption, setFilterOption] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await getInventoryItems();
-      setItems(data);
-    };
     fetchData();
-  }, []);
+  }, [filterOption]);
+
+  const fetchData = async () => {
+    const { data } = await getInventoryItems();
+    setItems(data);
+    console.log(data);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await createInventoryItem(formData);
-      const newItem = { ...formData, id: Date.now() };
-      setItems((prevItems) => [...prevItems, newItem]);
+      const { data } = await getInventoryItems();
+      setItems(data);
+
+      setFormData({
+        name: "",
+        companyName: "",
+        quantity: "",
+        size: "",
+        price: "",
+      });
       setIsDialogOpen(false);
     } catch (error) {
       console.log(error);
@@ -72,19 +84,22 @@ function Inventory() {
     setFilterOption(value);
   };
 
-  // Filter and sort items based on search input and filter option
+  useEffect(() => {
+    console.log("RERENDERED");
+  }, []);
+
   const filteredItems = items
-    .filter((item) => {
-      const itemName = item.name.toLowerCase();
+    ?.filter((item) => {
+      const itemName = item.name?.toLowerCase();
       const size = item.size;
       const status = item.processing;
       const price = item.price;
       const searchTerm = searchInput.toLowerCase();
       return (
-        itemName.includes(searchTerm) ||
-        price.includes(searchTerm) ||
-        size.includes(searchTerm) ||
-        status.includes(searchInput)
+        itemName?.includes(searchTerm) ||
+        price?.includes(searchTerm) ||
+        size?.includes(searchTerm) ||
+        status?.includes(searchInput)
       );
     })
     .sort((a, b) => {
@@ -106,15 +121,30 @@ function Inventory() {
       }
     });
 
+  const handleDelete = async (id) => {
+    try {
+      setIsLoading(true);
+
+      const { data } = await getItemByIdAndDelete(id);
+
+      setItems((prevItems) =>
+        prevItems.filter((item) => item._id !== data._id)
+      );
+    } catch (error) {
+      console.error("Error deleting item:", error);
+      alert("Failed to delete item. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      {/* Header with "Add Item" button */}
       <div className="flex items-center justify-between">
         <h1 className="text-lg md:text-2xl lg:text-3xl font-bold">
           Inventory Management
         </h1>
 
-        {/* Dialog to add new inventory item */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -127,9 +157,7 @@ function Inventory() {
               <DialogTitle>Add New Inventory Item</DialogTitle>
             </DialogHeader>
 
-            {/* Form for adding a new item */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Item Name Input */}
               <div className="space-y-2">
                 <Label htmlFor="name">Item Name</Label>
                 <Input
@@ -142,7 +170,6 @@ function Inventory() {
                 />
               </div>
 
-              {/* Quantity Input */}
               <div className="space-y-2">
                 <Label htmlFor="quantity">Quantity</Label>
                 <Input
@@ -157,7 +184,6 @@ function Inventory() {
                 />
               </div>
 
-              {/* Size Select */}
               <div className="space-y-2">
                 <Label htmlFor="size">Size</Label>
                 <Select
@@ -179,7 +205,6 @@ function Inventory() {
                 </Select>
               </div>
 
-              {/* Price Input */}
               <div className="space-y-2">
                 <Label htmlFor="price">Price</Label>
                 <Input
@@ -194,7 +219,6 @@ function Inventory() {
                 />
               </div>
 
-              {/* Submit Button */}
               <Button
                 type="submit"
                 className="w-full border hover:bg-slate-200"
@@ -208,13 +232,11 @@ function Inventory() {
 
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1">
-          {/* Search Bar */}
           <SearchBar
             searchInput={searchInput}
             onSearchChange={handleSearchChange}
           />
         </div>
-        {/* Filter Select with Search */}
         <Select value={filterOption} onValueChange={handleFilterChange}>
           <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="Filter by" />
@@ -230,7 +252,6 @@ function Inventory() {
         </Select>
       </div>
 
-      {/* Inventory Table */}
       <div className="rounded-t-[10px] border ">
         <Table>
           <TableHeader>
@@ -240,15 +261,15 @@ function Inventory() {
               <TableHead>Size</TableHead>
               <TableHead>Price</TableHead>
               <TableHead>Total price</TableHead>
+              <TableHead className="text-center">Action</TableHead>
             </TableRow>
           </TableHeader>
 
-          {/* Display filtered items */}
           <TableBody className="capitalize">
             {filteredItems.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-2">
-                  <h2 className="px-2 py-1">No Data Available</h2>
+                  <h2 className="px-2 py-1">Loading....</h2>
                 </TableCell>
               </TableRow>
             ) : (
@@ -268,6 +289,16 @@ function Inventory() {
                   <TableCell>{item.size}</TableCell>
                   <TableCell>{item.price}</TableCell>
                   <TableCell>{item.price * item.quantity}</TableCell>
+                  <TableCell className="text-center">
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      disabled={isLoading}
+                      onClick={() => handleDelete(item._id)}
+                    >
+                      {isLoading ? "Deleting..." : "Delete"}
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))
             )}

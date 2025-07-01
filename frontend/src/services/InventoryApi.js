@@ -1,6 +1,5 @@
 import apiClient from "@/config/config.js";
 
-// Creat New Order
 export const createInventoryItem = async (formData) => {
   try {
     await apiClient.post("/inventory", formData);
@@ -10,20 +9,15 @@ export const createInventoryItem = async (formData) => {
   }
 };
 
-// get all Inventory
 export const getInventoryItems = async () => {
   try {
-    const response = await apiClient.get("/inventory");
-
-    // console.log("items Fetched", response);
-    const data = response.data;
+    const { data } = await apiClient.get("/inventory");
     return data;
   } catch (error) {
     console.log("Failed adding items", error);
   }
 };
 
-// update Inventory Item
 export const updateInventoryItem = async (id, updatedData) => {
   try {
     if (!id) {
@@ -37,11 +31,12 @@ export const updateInventoryItem = async (id, updatedData) => {
 
     console.log(`Updating item with ID: ${id}`, updatedData);
 
-    await apiClient.put(`/inventory/${id}`, updatedData); // Remove extra wrapping
+    await apiClient.put(`/inventory/${id}`, updatedData);
   } catch (error) {
     console.error("Failed to update item:", error);
   }
 };
+
 export const getItemById = async (id) => {
   try {
     if (!id) {
@@ -55,6 +50,40 @@ export const getItemById = async (id) => {
     if (error.response) {
       console.error(
         `Error: Received ${error.response.status} response from server.`,
+        {
+          status: error.response.status,
+          data: error.response.data,
+        }
+      );
+    } else if (error.request) {
+      console.error("Error: No response received from server.", {
+        request: error.request,
+      });
+    } else {
+      console.error(
+        "Error: An unexpected error occurred while setting up the request.",
+        {
+          message: error.message,
+        }
+      );
+    }
+    throw error;
+  }
+};
+
+export const getItemByIdAndDelete = async (id) => {
+  try {
+    if (!id) {
+      return;
+    }
+    const response = await apiClient.delete(`/inventory/${id}`);
+    console.log("item Deleted", response);
+
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      console.error(
+        `Error: Deleting ${error.response.status} response from server.`,
         {
           status: error.response.status,
           data: error.response.data,
